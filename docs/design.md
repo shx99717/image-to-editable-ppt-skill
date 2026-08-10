@@ -34,9 +34,9 @@ Image to Editable PPT Skill 解决的问题只有一个：把「看得见但改�
 
 ## 双 skill 分工
 
-这个 skill 只做「重建」，不做「创作」。从文章、报告、大纲生成全新 PPT 是 [codex-ppt-skill](https://github.com/ningzimu/codex-ppt-skill) 的职责；两者的分工是：
+这个 skill 只做「重建」，不做「创作」。从文章、报告、大纲生成全新 PPT 是 [codex-ppt-skill](https://github.com/shx99717/codex-ppt-skill) 的职责；两者的分工是：
 
 - **codex-ppt**：内容 → 图片式 PPT。视觉统一、流程可控，适合大多数分享和汇报场景。
 - **image-to-editable-ppt**：图片式页面 → 可编辑 PPT。只在确实需要逐对象编辑时使用。
 
-关于两个技能的详细对比介绍，参见 [skill_duo_intro.pdf](https://github.com/ningzimu/image-to-editable-ppt-skill/blob/main/assets/skill_duo_intro.pdf)——这份 PPT 本身就是由 codex-ppt skill 生成的。
+关于两个技能的详细对比介绍，参见 [skill_duo_intro.pdf](https://github.com/shx99717/image-to-editable-ppt-skill/blob/main/assets/skill_duo_intro.pdf)——这份 PPT 本身就是由 codex-ppt skill 生成的。

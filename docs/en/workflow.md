@@ -58,7 +58,7 @@ output/image-to-editable-ppt/{job-id}/        # Conversion task directory
 
 ## Limitations
 
-- This skill reconstructs an input page as editable objects; it does not generate a new presentation from scratch. That is the responsibility of [codex-ppt-skill](https://github.com/ningzimu/codex-ppt-skill).
+- This skill reconstructs an input page as editable objects; it does not generate a new presentation from scratch. That is the responsibility of [codex-ppt-skill](https://github.com/shx99717/codex-ppt-skill).
 - Complex visual elements such as photos, illustrations, textures, and hand-drawn decoration can usually be moved only as separate image assets; their internal objects are not guaranteed to be editable.
 - For structured regions such as tables, charts, and flowcharts, the skill prioritizes preserving editable semantics. When confidence is low, it keeps the region as an asset and explains the choice in the validation report.
 - Some image elements and text positions may be slightly offset. A 100% match to the source page is not guaranteed.

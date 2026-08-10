@@ -33,7 +33,7 @@
 > 更轻量的做法是直接使用 gpt-image-2 的图像编辑能力：把你不满意的那一页 PPT 图片发给它，让它针对性修改，并返回修改后的图片。
 
 > [!TIP]
-> 本 skill 不负责从文章、报告、大纲或想法直接生成全新 PPT。如果你要做的是“生成一份 PPT”，可以使用 [codex-ppt-skill](https://github.com/ningzimu/codex-ppt-skill)。
+> 本 skill 不负责从文章、报告、大纲或想法直接生成全新 PPT。如果你要做的是“生成一份 PPT”，可以使用 [codex-ppt-skill](https://github.com/shx99717/codex-ppt-skill)。
 >
 > 关于 `codex-ppt` 和 `image-to-editable-ppt` 这两个技能的详细介绍，参见 [skill_duo_intro.pdf](assets/skill_duo_intro.pdf)。该 PPT 由 `codex-ppt` skill 生成，提示词为：“请分别阅读 Codex PPT和 Image to Editable PPT 这两个技能的内容，然后用 Codex PPT 帮我做一个PPT吧，20页，每个技能的介绍10页。”
 >
@@ -129,7 +129,7 @@ CLI fallback 的 `editppt image generate/edit` 参数面保持精简：请求输
 ## 安装
 
 ```text
-安装 image-to-editable-ppt 这个 skill，地址是 https://github.com/ningzimu/image-to-editable-ppt-skill
+安装 image-to-editable-ppt 这个 skill，地址是 https://github.com/shx99717/image-to-editable-ppt-skill
 ```
 
 安装 skill 后，正常转换、图片 API fallback 和 OCR Token 配置都由 AI 在执行过程中检查和处理；你只需要在 AI 询问时提供第三方 API 信息或 OCR Token。
@@ -137,7 +137,7 @@ CLI fallback 的 `editppt image generate/edit` 参数面保持精简：请求输
 ## 更新
 
 ```text
-更新 image-to-editable-ppt 这个 skill，地址是 https://github.com/ningzimu/image-to-editable-ppt-skill
+更新 image-to-editable-ppt 这个 skill，地址是 https://github.com/shx99717/image-to-editable-ppt-skill
 ```
 
 ## 使用方式
@@ -235,7 +235,7 @@ output/image-to-editable-ppt/{job-id}/        # 单次转换任务目录
 
 ## 支持
 
-遇到问题？请查看[使用文档](https://ningzimu.github.io/image-to-editable-ppt-skill/#/)，加入 [CodexPPT](https://t.me/CodexPPT)，或[提交 Issue](https://github.com/ningzimu/image-to-editable-ppt-skill/issues/new)。
+遇到问题？请查看[使用文档](https://ningzimu.github.io/image-to-editable-ppt-skill/#/)，加入 [CodexPPT](https://t.me/CodexPPT)，或[提交 Issue](https://github.com/shx99717/image-to-editable-ppt-skill/issues/new)。
 
 ## 许可证
 

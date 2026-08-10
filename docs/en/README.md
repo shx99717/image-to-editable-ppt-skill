@@ -51,11 +51,11 @@ If you are already using the skill and run into problems, see [FAQ](/en/faq.md).
 
 **We recommend running this skill in Codex with Full Access enabled.** Otherwise, approval prompts may repeatedly interrupt OCR, image generation, and subagent dispatch. See [Installation and Configuration](/en/installation.md).
 
-This skill does not create a new presentation from an article, report, outline, or idea. If your goal is to generate a presentation, use [codex-ppt-skill](https://github.com/ningzimu/codex-ppt-skill).
+This skill does not create a new presentation from an article, report, outline, or idea. If your goal is to generate a presentation, use [codex-ppt-skill](https://github.com/shx99717/codex-ppt-skill).
 
 ## Related Links
 
-- GitHub repository: https://github.com/ningzimu/image-to-editable-ppt-skill
+- GitHub repository: https://github.com/shx99717/image-to-editable-ppt-skill
 - Project website: https://ppt-skill.ningzimu.vip
-- Presentation-generation skill (sister project): https://github.com/ningzimu/codex-ppt-skill
+- Presentation-generation skill (sister project): https://github.com/shx99717/codex-ppt-skill
 - Design and optimization experience: [What 2,000 GitHub Stars Taught Me: Great AI Skills Are Tuned, Not Written](https://mp.weixin.qq.com/s/LaxWBX-nogHPpSxlk-Vs8Q)

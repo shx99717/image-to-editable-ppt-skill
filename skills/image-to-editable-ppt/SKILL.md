@@ -169,7 +169,7 @@ Agents continue only from file facts and `editppt run next`. Required states:
 Reinstall through the installation channel, refresh the CLI from the updated skill directory, then restart the agent session and verify:
 
 ```bash
-npx -y skills@latest add ningzimu/image-to-editable-ppt-skill \
+npx -y skills@latest add shx99717/image-to-editable-ppt-skill \
   --skill image-to-editable-ppt \
   --agent <agent-id> \
   --global

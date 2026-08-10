@@ -33,7 +33,7 @@ It is useful when screenshot-like or image-based slides need to become easier to
 > A lighter approach is to use gpt-image-2 image editing directly: provide the specific PPT page image you are unhappy with, ask for a targeted edit, and have it return the modified image.
 
 > [!TIP]
-> This skill does not create new decks from articles, reports, outlines, or ideas. If your goal is to generate a PPT, use [codex-ppt-skill](https://github.com/ningzimu/codex-ppt-skill).
+> This skill does not create new decks from articles, reports, outlines, or ideas. If your goal is to generate a PPT, use [codex-ppt-skill](https://github.com/shx99717/codex-ppt-skill).
 >
 > For a detailed introduction to `codex-ppt` and `image-to-editable-ppt`, see [skill_duo_intro.pdf](assets/skill_duo_intro.pdf). This deck was generated with the `codex-ppt` skill using the prompt: "请分别阅读 Codex PPT和 Image to Editable PPT 这两个技能的内容，然后用 Codex PPT 帮我做一个PPT吧，20页，每个技能的介绍10页。"
 >
@@ -129,7 +129,7 @@ The skill still runs without a token: it falls back to the built-in offline dete
 ## Install
 
 ```text
-Install the image-to-editable-ppt skill from https://github.com/ningzimu/image-to-editable-ppt-skill
+Install the image-to-editable-ppt skill from https://github.com/shx99717/image-to-editable-ppt-skill
 ```
 
 After the skill is installed, normal conversion, image API fallback, and OCR token configuration are checked and handled by the AI while it executes the skill. You only need to provide third-party API details or an OCR token when the AI asks.
@@ -137,7 +137,7 @@ After the skill is installed, normal conversion, image API fallback, and OCR tok
 ## Update
 
 ```text
-Update the image-to-editable-ppt skill from https://github.com/ningzimu/image-to-editable-ppt-skill
+Update the image-to-editable-ppt skill from https://github.com/shx99717/image-to-editable-ppt-skill
 ```
 
 ## Usage
@@ -235,7 +235,7 @@ output/image-to-editable-ppt/{job-id}/        # One conversion job folder
 
 ## Support
 
-Having trouble? Check the [usage documentation](https://ningzimu.github.io/image-to-editable-ppt-skill/#/en/), join [CodexPPT](https://t.me/CodexPPT), or [open an issue](https://github.com/ningzimu/image-to-editable-ppt-skill/issues/new).
+Having trouble? Check the [usage documentation](https://ningzimu.github.io/image-to-editable-ppt-skill/#/en/), join [CodexPPT](https://t.me/CodexPPT), or [open an issue](https://github.com/shx99717/image-to-editable-ppt-skill/issues/new).
 
 ## License
 

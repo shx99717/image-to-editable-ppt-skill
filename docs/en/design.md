@@ -34,9 +34,9 @@ Do not judge conversion quality from preview images alone. Review the PPTX struc
 
 ## Two Skills, Two Responsibilities
 
-This skill performs reconstruction, not creation. Generating a new presentation from an article, report, or outline is the responsibility of [codex-ppt-skill](https://github.com/ningzimu/codex-ppt-skill). The two skills serve different purposes:
+This skill performs reconstruction, not creation. Generating a new presentation from an article, report, or outline is the responsibility of [codex-ppt-skill](https://github.com/shx99717/codex-ppt-skill). The two skills serve different purposes:
 
 - **codex-ppt**: content → image-based PowerPoint. It provides consistent visuals and a controlled workflow for most presentations and reports.
 - **image-to-editable-ppt**: image-based slides → editable PowerPoint. Use it only when object-level editability is genuinely required.
 
-For a detailed comparison of the two skills, see [skill_duo_intro.pdf](https://github.com/ningzimu/image-to-editable-ppt-skill/blob/main/assets/skill_duo_intro.pdf). The presentation itself was generated with codex-ppt skill.
+For a detailed comparison of the two skills, see [skill_duo_intro.pdf](https://github.com/shx99717/image-to-editable-ppt-skill/blob/main/assets/skill_duo_intro.pdf). The presentation itself was generated with codex-ppt skill.

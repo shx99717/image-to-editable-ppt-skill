@@ -34,9 +34,9 @@ OCR Token을 설정하지 않으면 skill은 내장 오프라인 감지기로 �
 
 ## 두 skill의 역할 분담
 
-이 skill은 “재구성”만 담당하고 “창작”은 담당하지 않습니다. 글, 보고서, 개요에서 새로운 PPT를 만드는 일은 [codex-ppt-skill](https://github.com/ningzimu/codex-ppt-skill)의 역할입니다. 두 skill의 역할은 다음과 같습니다.
+이 skill은 “재구성”만 담당하고 “창작”은 담당하지 않습니다. 글, 보고서, 개요에서 새로운 PPT를 만드는 일은 [codex-ppt-skill](https://github.com/shx99717/codex-ppt-skill)의 역할입니다. 두 skill의 역할은 다음과 같습니다.
 
 - **codex-ppt**: 콘텐츠 → 이미지 기반 PPT. 시각적 일관성과 제어 가능한 흐름을 제공하며 대부분의 발표와 보고에 적합합니다.
 - **image-to-editable-ppt**: 이미지 기반 페이지 → 편집 가능한 PPT. 객체별 편집이 실제로 필요한 경우에만 사용합니다.
 
-두 skill의 자세한 비교는 [skill_duo_intro.pdf](https://github.com/ningzimu/image-to-editable-ppt-skill/blob/main/assets/skill_duo_intro.pdf)를 참고하세요. 이 PPT 자체도 codex-ppt skill로 생성되었습니다.
+두 skill의 자세한 비교는 [skill_duo_intro.pdf](https://github.com/shx99717/image-to-editable-ppt-skill/blob/main/assets/skill_duo_intro.pdf)를 참고하세요. 이 PPT 자체도 codex-ppt skill로 생성되었습니다.

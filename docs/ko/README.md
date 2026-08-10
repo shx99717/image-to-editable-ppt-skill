@@ -51,11 +51,11 @@ Image to Editable PPT는 이미지, PDF, 이미지 기반 PPT를 **객체 단위
 
 **Codex에서는 “전체 액세스 권한” 사용을 권장합니다.** 그렇지 않으면 OCR, 이미지 생성, 하위 agent 분배 등의 단계가 승인 요청으로 자주 중단될 수 있습니다. 자세한 내용은 [설치 및 구성](/ko/installation.md)을 참고하세요.
 
-이 skill은 글, 보고서, 개요 또는 아이디어에서 새로운 PPT를 직접 만드는 용도가 아닙니다. “PPT 생성”이 목적이라면 [codex-ppt-skill](https://github.com/ningzimu/codex-ppt-skill)을 사용하세요.
+이 skill은 글, 보고서, 개요 또는 아이디어에서 새로운 PPT를 직접 만드는 용도가 아닙니다. “PPT 생성”이 목적이라면 [codex-ppt-skill](https://github.com/shx99717/codex-ppt-skill)을 사용하세요.
 
 ## 관련 링크
 
-- GitHub 저장소: https://github.com/ningzimu/image-to-editable-ppt-skill
+- GitHub 저장소: https://github.com/shx99717/image-to-editable-ppt-skill
 - 프로젝트 홈페이지: https://ppt-skill.ningzimu.vip
-- PPT 생성 skill(자매 프로젝트): https://github.com/ningzimu/codex-ppt-skill
+- PPT 생성 skill(자매 프로젝트): https://github.com/shx99717/codex-ppt-skill
 - 설계 및 조정 경험: [2000 个 GitHub Star 换来的经验：好的 AI Skill 是调出来的，不是写出来的](https://mp.weixin.qq.com/s/LaxWBX-nogHPpSxlk-Vs8Q)

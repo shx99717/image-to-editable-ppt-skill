@@ -5,14 +5,14 @@
 推荐直接把下面这句话发给你的 agent，让它帮你安装：
 
 ```text
-安装 image-to-editable-ppt 这个 skill，地址是 https://github.com/ningzimu/image-to-editable-ppt-skill
+安装 image-to-editable-ppt 这个 skill，地址是 https://github.com/shx99717/image-to-editable-ppt-skill
 ```
 
 安装后，正常转换、图片 API fallback 和 OCR Token 配置都由 AI 在执行过程中检查和处理；你只需要在 AI 询问时提供第三方 API 信息或 OCR Token。
 
 ## 手动安装
 
-从 [GitHub Releases](https://github.com/ningzimu/image-to-editable-ppt-skill/releases) 下载 `image-to-editable-ppt-skill-v*.zip`，解压后把其中的 `image-to-editable-ppt` 文件夹放到 agent 的 skills 目录（Codex 为 `~/.codex/skills/image-to-editable-ppt`），然后重启 agent。
+从 [GitHub Releases](https://github.com/shx99717/image-to-editable-ppt-skill/releases) 下载 `image-to-editable-ppt-skill-v*.zip`，解压后把其中的 `image-to-editable-ppt` 文件夹放到 agent 的 skills 目录（Codex 为 `~/.codex/skills/image-to-editable-ppt`），然后重启 agent。
 
 如果你在本地开发这个仓库，可以把 skill 目录软链接到 skills 目录，方便实时调试修改：
 
@@ -26,12 +26,12 @@ ln -s /path/to/image-to-editable-ppt-skill/skills/image-to-editable-ppt ~/.codex
 推荐直接把下面这句话发给你的 agent：
 
 ```text
-更新 image-to-editable-ppt 这个 skill，地址是 https://github.com/ningzimu/image-to-editable-ppt-skill
+更新 image-to-editable-ppt 这个 skill，地址是 https://github.com/shx99717/image-to-editable-ppt-skill
 ```
 
-手动更新时，从 [GitHub Releases](https://github.com/ningzimu/image-to-editable-ppt-skill/releases) 下载最新 zip，解压后替换原来的 `image-to-editable-ppt` 目录。更新完成后重启 agent 生效。
+手动更新时，从 [GitHub Releases](https://github.com/shx99717/image-to-editable-ppt-skill/releases) 下载最新 zip，解压后替换原来的 `image-to-editable-ppt` 目录。更新完成后重启 agent 生效。
 
-更新是安全的：图片 API 凭据和 OCR Token 都保存在 `~/.editppt/config.yaml`（Windows 下为 `%USERPROFILE%\.editppt\config.yaml`），在 skill 安装目录之外，更新或重装不会丢失。每个版本的变更内容可以查看 [Releases 页面](https://github.com/ningzimu/image-to-editable-ppt-skill/releases)或仓库的 `CHANGELOG.md`。
+更新是安全的：图片 API 凭据和 OCR Token 都保存在 `~/.editppt/config.yaml`（Windows 下为 `%USERPROFILE%\.editppt\config.yaml`），在 skill 安装目录之外，更新或重装不会丢失。每个版本的变更内容可以查看 [Releases 页面](https://github.com/shx99717/image-to-editable-ppt-skill/releases)或仓库的 `CHANGELOG.md`。
 
 ## 运行权限建议
 

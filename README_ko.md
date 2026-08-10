@@ -33,7 +33,7 @@
 > 더 가벼운 방법은 gpt-image-2의 이미지 편집 기능을 직접 사용하는 것입니다. 마음에 들지 않는 PPT 페이지 이미지를 보내고 필요한 부분만 수정한 이미지를 돌려받을 수 있습니다.
 
 > [!TIP]
-> 이 skill은 글, 보고서, 개요 또는 아이디어에서 새로운 PPT를 직접 만드는 용도가 아닙니다. “PPT 생성”이 목적이라면 [codex-ppt-skill](https://github.com/ningzimu/codex-ppt-skill)을 사용하세요.
+> 이 skill은 글, 보고서, 개요 또는 아이디어에서 새로운 PPT를 직접 만드는 용도가 아닙니다. “PPT 생성”이 목적이라면 [codex-ppt-skill](https://github.com/shx99717/codex-ppt-skill)을 사용하세요.
 >
 > `codex-ppt`와 `image-to-editable-ppt` 두 skill에 대한 자세한 소개는 [skill_duo_intro.pdf](assets/skill_duo_intro.pdf)를 참고하세요. 이 PPT는 `codex-ppt` skill로 생성되었으며 프롬프트는 다음과 같습니다. “Codex PPT와 Image to Editable PPT 두 skill의 내용을 각각 읽고, Codex PPT로 20페이지짜리 PPT를 만들어 주세요. 각 skill 소개는 10페이지씩 구성해 주세요.”
 >
@@ -129,7 +129,7 @@ Token 없이도 실행할 수 있습니다. 이 경우 skill은 내장 오프라
 ## 설치
 
 ```text
-image-to-editable-ppt skill을 설치해 주세요. 주소는 https://github.com/ningzimu/image-to-editable-ppt-skill 입니다.
+image-to-editable-ppt skill을 설치해 주세요. 주소는 https://github.com/shx99717/image-to-editable-ppt-skill 입니다.
 ```
 
 skill 설치 후 일반 변환, 이미지 API 폴백, OCR Token 설정은 AI가 실행 중 확인하고 처리합니다. AI가 요청할 때 타사 API 정보나 OCR Token만 제공하면 됩니다.
@@ -137,7 +137,7 @@ skill 설치 후 일반 변환, 이미지 API 폴백, OCR Token 설정은 AI가 
 ## 업데이트
 
 ```text
-image-to-editable-ppt skill을 업데이트해 주세요. 주소는 https://github.com/ningzimu/image-to-editable-ppt-skill 입니다.
+image-to-editable-ppt skill을 업데이트해 주세요. 주소는 https://github.com/shx99717/image-to-editable-ppt-skill 입니다.
 ```
 
 ## 사용 방법
@@ -235,7 +235,7 @@ output/image-to-editable-ppt/{job-id}/        # 단일 변환 작업 디렉터�
 
 ## 지원
 
-문제가 있나요? [사용 설명서](https://ningzimu.github.io/image-to-editable-ppt-skill/#/ko/)를 확인하고, [CodexPPT](https://t.me/CodexPPT)에 참여하거나, [Issue를 등록하세요](https://github.com/ningzimu/image-to-editable-ppt-skill/issues/new).
+문제가 있나요? [사용 설명서](https://ningzimu.github.io/image-to-editable-ppt-skill/#/ko/)를 확인하고, [CodexPPT](https://t.me/CodexPPT)에 참여하거나, [Issue를 등록하세요](https://github.com/shx99717/image-to-editable-ppt-skill/issues/new).
 
 ## 라이선스
 

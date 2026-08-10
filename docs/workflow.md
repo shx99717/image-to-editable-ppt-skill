@@ -58,7 +58,7 @@ output/image-to-editable-ppt/{job-id}/        # 单次转换任务目录
 
 ## 能力边界
 
-- 这个 skill 面向输入页面的可编辑重建，不是从零生成整套 PPT 内容——那是 [codex-ppt-skill](https://github.com/ningzimu/codex-ppt-skill) 的职责。
+- 这个 skill 面向输入页面的可编辑重建，不是从零生成整套 PPT 内容——那是 [codex-ppt-skill](https://github.com/shx99717/codex-ppt-skill) 的职责。
 - 对照片、插画、纹理、手绘装饰等复杂视觉元素，通常只能作为独立图片资产移动，不能保证内部对象可编辑。
 - 对表格、图表、流程图等结构化区域，会优先保留可编辑语义，但低置信度时保留为资产并在验证报告里说明。
 - 部分图片元素和文字位置可能会有轻微偏移，不能保证 100% 复刻原始页面。

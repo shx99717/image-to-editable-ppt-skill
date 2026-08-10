@@ -10,7 +10,7 @@
 
 편집 가능성이 꼭 필요하지 않다면 사용하지 마세요. 더 가벼운 방법은 `gpt-image-2`의 이미지 편집 기능을 직접 사용하는 것입니다. 마음에 들지 않는 PPT 페이지 이미지를 보내고 필요한 부분만 수정한 이미지를 돌려받을 수 있습니다.
 
-또한 이 skill은 글, 보고서, 개요 또는 아이디어에서 새로운 PPT를 만드는 용도가 아닙니다. 그 역할은 [codex-ppt-skill](https://github.com/ningzimu/codex-ppt-skill)이 담당합니다.
+또한 이 skill은 글, 보고서, 개요 또는 아이디어에서 새로운 PPT를 만드는 용도가 아닙니다. 그 역할은 [codex-ppt-skill](https://github.com/shx99717/codex-ppt-skill)이 담당합니다.
 
 ## Q: 왜 “전체 액세스 권한”을 권장하나요?
 
@@ -44,7 +44,7 @@ Claude Code, OpenClaw, Hermes Agent 등 Codex가 아닌 환경에는 일반적�
 
 ## Q: skill을 최신 버전으로 업데이트하려면 어떻게 하나요?
 
-agent에게 “image-to-editable-ppt skill을 업데이트해 주세요. 주소는 https://github.com/ningzimu/image-to-editable-ppt-skill 입니다.”라고 보내거나 Releases에서 최신 zip을 내려받아 기존 디렉터리를 교체한 뒤 agent를 다시 시작하세요. API 자격 증명과 OCR Token은 skill 디렉터리 밖의 `~/.editppt/config.yaml`에 저장되므로 업데이트해도 사라지지 않습니다. 자세한 내용은 [설치 및 구성](/ko/installation.md)을 참고하세요.
+agent에게 “image-to-editable-ppt skill을 업데이트해 주세요. 주소는 https://github.com/shx99717/image-to-editable-ppt-skill 입니다.”라고 보내거나 Releases에서 최신 zip을 내려받아 기존 디렉터리를 교체한 뒤 agent를 다시 시작하세요. API 자격 증명과 OCR Token은 skill 디렉터리 밖의 `~/.editppt/config.yaml`에 저장되므로 업데이트해도 사라지지 않습니다. 자세한 내용은 [설치 및 구성](/ko/installation.md)을 참고하세요.
 
 ## Q: 변환이 중간에 멈추면 어떻게 해야 하나요?
 

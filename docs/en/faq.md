@@ -10,7 +10,7 @@ This skill uses a multi-agent reconstruction workflow. The AI runs a rebuild →
 
 Do not use it unless you have a strong need for editability. A lighter alternative is to use `gpt-image-2` directly: send it the slide image you want to change and ask it to make targeted edits and return the revised image.
 
-This skill also does not generate a new presentation from an article, report, outline, or idea. That is the responsibility of [codex-ppt-skill](https://github.com/ningzimu/codex-ppt-skill).
+This skill also does not generate a new presentation from an article, report, outline, or idea. That is the responsibility of [codex-ppt-skill](https://github.com/shx99717/codex-ppt-skill).
 
 ## Why Is Full Access Recommended?
 
@@ -44,7 +44,7 @@ Image generation and editing prefer the current agent's built-in `image_gen.imag
 
 ## How Do I Update the Skill?
 
-Ask your agent to update it by sending: “Update the image-to-editable-ppt skill from https://github.com/ningzimu/image-to-editable-ppt-skill”. Alternatively, download the latest zip from Releases, replace the existing directory, and restart the agent. API credentials and the OCR Token are stored outside the skill directory in `~/.editppt/config.yaml`, so updates do not remove them. See [Installation and Configuration](/en/installation.md).
+Ask your agent to update it by sending: “Update the image-to-editable-ppt skill from https://github.com/shx99717/image-to-editable-ppt-skill”. Alternatively, download the latest zip from Releases, replace the existing directory, and restart the agent. API credentials and the OCR Token are stored outside the skill directory in `~/.editppt/config.yaml`, so updates do not remove them. See [Installation and Configuration](/en/installation.md).
 
 ## What Should I Do If a Conversion Stops Partway Through?
 

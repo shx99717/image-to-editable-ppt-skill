@@ -10,7 +10,7 @@
 
 如果没有强烈的可编辑需求，请不要使用。更轻量的做法是直接使用 `gpt-image-2` 的图像编辑能力：把你不满意的那一页 PPT 图片发给它，让它针对性修改并返回修改后的图片。
 
-另外，本 skill 不负责从文章、报告、大纲或想法生成全新 PPT——那是 [codex-ppt-skill](https://github.com/ningzimu/codex-ppt-skill) 的职责。
+另外，本 skill 不负责从文章、报告、大纲或想法生成全新 PPT——那是 [codex-ppt-skill](https://github.com/shx99717/codex-ppt-skill) 的职责。
 
 ## Q：为什么建议使用「完全访问权限」？
 
@@ -44,7 +44,7 @@
 
 ## Q：如何更新 skill 到最新版本？
 
-直接让 agent 帮你更新（发一句「更新 image-to-editable-ppt 这个 skill，地址是 https://github.com/ningzimu/image-to-editable-ppt-skill」），或从 Releases 下载最新 zip 替换原目录，然后重启 agent 生效。API 凭据和 OCR Token 保存在 `~/.editppt/config.yaml`，在 skill 目录之外，更新不会丢失。详见[安装与配置](installation.md)。
+直接让 agent 帮你更新（发一句「更新 image-to-editable-ppt 这个 skill，地址是 https://github.com/shx99717/image-to-editable-ppt-skill」），或从 Releases 下载最新 zip 替换原目录，然后重启 agent 生效。API 凭据和 OCR Token 保存在 `~/.editppt/config.yaml`，在 skill 目录之外，更新不会丢失。详见[安装与配置](installation.md)。
 
 ## Q：转换到一半停住了怎么办？
 

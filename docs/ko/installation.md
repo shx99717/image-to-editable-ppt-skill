@@ -5,14 +5,14 @@
 아래 문장을 agent에게 보내 설치를 맡기는 방법을 권장합니다.
 
 ```text
-image-to-editable-ppt skill을 설치해 주세요. 주소는 https://github.com/ningzimu/image-to-editable-ppt-skill 입니다.
+image-to-editable-ppt skill을 설치해 주세요. 주소는 https://github.com/shx99717/image-to-editable-ppt-skill 입니다.
 ```
 
 설치 후 일반 변환, 이미지 API 폴백, OCR Token 설정은 AI가 실행 중 확인하고 처리합니다. AI가 요청할 때 타사 API 정보나 OCR Token만 제공하면 됩니다.
 
 ## 수동 설치
 
-[GitHub Releases](https://github.com/ningzimu/image-to-editable-ppt-skill/releases)에서 `image-to-editable-ppt-skill-v*.zip`을 내려받아 압축을 풉니다. 그 안의 `image-to-editable-ppt` 폴더를 agent의 skills 디렉터리(Codex는 `~/.codex/skills/image-to-editable-ppt`)에 넣고 agent를 다시 시작하세요.
+[GitHub Releases](https://github.com/shx99717/image-to-editable-ppt-skill/releases)에서 `image-to-editable-ppt-skill-v*.zip`을 내려받아 압축을 풉니다. 그 안의 `image-to-editable-ppt` 폴더를 agent의 skills 디렉터리(Codex는 `~/.codex/skills/image-to-editable-ppt`)에 넣고 agent를 다시 시작하세요.
 
 이 저장소를 로컬에서 개발하는 경우 skill 디렉터리를 skills 디렉터리에 심볼릭 링크해 변경 사항을 실시간으로 테스트할 수 있습니다.
 
@@ -26,12 +26,12 @@ ln -s /path/to/image-to-editable-ppt-skill/skills/image-to-editable-ppt ~/.codex
 아래 문장을 agent에게 보내 업데이트를 맡기는 방법을 권장합니다.
 
 ```text
-image-to-editable-ppt skill을 업데이트해 주세요. 주소는 https://github.com/ningzimu/image-to-editable-ppt-skill 입니다.
+image-to-editable-ppt skill을 업데이트해 주세요. 주소는 https://github.com/shx99717/image-to-editable-ppt-skill 입니다.
 ```
 
-수동으로 업데이트하려면 [GitHub Releases](https://github.com/ningzimu/image-to-editable-ppt-skill/releases)에서 최신 zip을 내려받아 압축을 풀고 기존 `image-to-editable-ppt` 디렉터리를 교체하세요. 업데이트 후 agent를 다시 시작하면 적용됩니다.
+수동으로 업데이트하려면 [GitHub Releases](https://github.com/shx99717/image-to-editable-ppt-skill/releases)에서 최신 zip을 내려받아 압축을 풀고 기존 `image-to-editable-ppt` 디렉터리를 교체하세요. 업데이트 후 agent를 다시 시작하면 적용됩니다.
 
-업데이트는 안전합니다. 이미지 API 자격 증명과 OCR Token은 skill 설치 디렉터리 밖의 `~/.editppt/config.yaml`(Windows에서는 `%USERPROFILE%\.editppt\config.yaml`)에 저장되므로 업데이트하거나 다시 설치해도 사라지지 않습니다. 각 버전의 변경 사항은 [Releases 페이지](https://github.com/ningzimu/image-to-editable-ppt-skill/releases) 또는 저장소의 `CHANGELOG.md`에서 확인할 수 있습니다.
+업데이트는 안전합니다. 이미지 API 자격 증명과 OCR Token은 skill 설치 디렉터리 밖의 `~/.editppt/config.yaml`(Windows에서는 `%USERPROFILE%\.editppt\config.yaml`)에 저장되므로 업데이트하거나 다시 설치해도 사라지지 않습니다. 각 버전의 변경 사항은 [Releases 페이지](https://github.com/shx99717/image-to-editable-ppt-skill/releases) 또는 저장소의 `CHANGELOG.md`에서 확인할 수 있습니다.
 
 ## 실행 권한 권장 사항
 

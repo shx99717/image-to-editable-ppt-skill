@@ -51,11 +51,11 @@ Image to Editable PPT 是一个把图片、PDF、图片版 PPT 转成**对象级
 
 **建议在 Codex 中使用「完全访问权限」执行本 skill**，否则 OCR、图片生成和子 agent 分派等步骤会被审批请求频繁打断，详见[安装与配置](installation.md)。
 
-本 skill 不负责从文章、报告、大纲或想法直接生成全新 PPT。如果你要做的是「生成一份 PPT」，请使用 [codex-ppt-skill](https://github.com/ningzimu/codex-ppt-skill)。
+本 skill 不负责从文章、报告、大纲或想法直接生成全新 PPT。如果你要做的是「生成一份 PPT」，请使用 [codex-ppt-skill](https://github.com/shx99717/codex-ppt-skill)。
 
 ## 相关链接
 
-- GitHub 仓库：https://github.com/ningzimu/image-to-editable-ppt-skill
+- GitHub 仓库：https://github.com/shx99717/image-to-editable-ppt-skill
 - 项目主页：https://ppt-skill.ningzimu.vip
-- PPT 生成 skill（姊妹项目）：https://github.com/ningzimu/codex-ppt-skill
+- PPT 生成 skill（姊妹项目）：https://github.com/shx99717/codex-ppt-skill
 - 设计与调优经验分享：[2000 个 GitHub Star 换来的经验：好的 AI Skill 是调出来的，不是写出来的](https://mp.weixin.qq.com/s/LaxWBX-nogHPpSxlk-Vs8Q)

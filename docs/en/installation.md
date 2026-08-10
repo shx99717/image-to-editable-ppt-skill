@@ -5,14 +5,14 @@
 We recommend sending the following sentence directly to your agent and letting it install the skill:
 
 ```text
-Install the image-to-editable-ppt skill from https://github.com/ningzimu/image-to-editable-ppt-skill
+Install the image-to-editable-ppt skill from https://github.com/shx99717/image-to-editable-ppt-skill
 ```
 
 After installation, the AI checks and handles normal conversion requirements, image API fallback, and OCR Token configuration as part of the workflow. You only need to provide third-party API details or an OCR Token when asked.
 
 ## Manual Installation
 
-Download `image-to-editable-ppt-skill-v*.zip` from [GitHub Releases](https://github.com/ningzimu/image-to-editable-ppt-skill/releases). Extract it, place the included `image-to-editable-ppt` folder in your agent's skills directory (`~/.codex/skills/image-to-editable-ppt` for Codex), and restart the agent.
+Download `image-to-editable-ppt-skill-v*.zip` from [GitHub Releases](https://github.com/shx99717/image-to-editable-ppt-skill/releases). Extract it, place the included `image-to-editable-ppt` folder in your agent's skills directory (`~/.codex/skills/image-to-editable-ppt` for Codex), and restart the agent.
 
 If you are developing this repository locally, you can symlink the skill directory into your skills directory so changes are available immediately:
 
@@ -26,12 +26,12 @@ ln -s /path/to/image-to-editable-ppt-skill/skills/image-to-editable-ppt ~/.codex
 We recommend sending the following sentence directly to your agent:
 
 ```text
-Update the image-to-editable-ppt skill from https://github.com/ningzimu/image-to-editable-ppt-skill
+Update the image-to-editable-ppt skill from https://github.com/shx99717/image-to-editable-ppt-skill
 ```
 
-To update manually, download the latest zip from [GitHub Releases](https://github.com/ningzimu/image-to-editable-ppt-skill/releases), extract it, and replace the existing `image-to-editable-ppt` directory. Restart the agent when the update is complete.
+To update manually, download the latest zip from [GitHub Releases](https://github.com/shx99717/image-to-editable-ppt-skill/releases), extract it, and replace the existing `image-to-editable-ppt` directory. Restart the agent when the update is complete.
 
-Updates are safe: image API credentials and the OCR Token are stored outside the skill installation directory in `~/.editppt/config.yaml` (`%USERPROFILE%\.editppt\config.yaml` on Windows), so updates and reinstalls will not remove them. See the [Releases page](https://github.com/ningzimu/image-to-editable-ppt-skill/releases) or the repository's `CHANGELOG.md` for changes in each version.
+Updates are safe: image API credentials and the OCR Token are stored outside the skill installation directory in `~/.editppt/config.yaml` (`%USERPROFILE%\.editppt\config.yaml` on Windows), so updates and reinstalls will not remove them. See the [Releases page](https://github.com/shx99717/image-to-editable-ppt-skill/releases) or the repository's `CHANGELOG.md` for changes in each version.
 
 ## Recommended Permissions
 
