@@ -4,7 +4,7 @@ This page describes the complete conversion process from input to final `.pptx`,
 
 ## End-to-End Process
 
-1. **Create a task directory and normalize the input**: create an isolated task directory, normalize the input (images, PDF, or image-based PowerPoint) into `pages/page_NNN/source.png`, detect whether built-in `image_gen.imagegen` is available, and record the image backend selected for the run.
+1. **Create a task directory and normalize the input**: create an isolated task directory, normalize the input (images, PDF, or image-based PowerPoint) into `pages/page_NNN/source.png`; the parent agent probes and locks a specific image backend (such as `GenerateImage` / `image_gen.imagegen` / `codex-gpt-image` / CLI) before recording it for the run.
 2. **Create OCR text annotations (when a Token is configured)**: submit the entire input to OCR as a batch task. OCR produces page-level text annotations—bounding boxes, measured font sizes, font-size groups, and recognized text—which guide measurement-based text reconstruction.
 3. **Dispatch pages**: for a one-page input, the main agent claims the page with `editppt run dispatch --local` and reconstructs it locally. For multi-page input, pages are dispatched in batches of up to `max_concurrent_pages` to page workers for parallel reconstruction.
 4. **Reconstruct and self-check each page**: each reconstructor owns its page directory and performs reconstruction, source comparison, and page-local corrections, potentially over multiple iterations. It creates a manifest and rebuilds editable text, simple shapes, and image assets. When needed, it uses the image backend to separate foreground and background elements or extract assets.

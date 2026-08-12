@@ -1,0 +1,1 @@
+Fixture `tests/smoke-reconstruction/fixtures/coffee-extraction.pptx` copied from `D:/git/codex-ppt-skill/tests/smoke-deck/runs/20260810-1654-claude/coffee-extraction/coffee-extraction.pptx` (size 4296403 bytes; ZipFile slide count = 3).

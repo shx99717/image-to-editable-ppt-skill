@@ -40,7 +40,7 @@ Because results depend on the model's underlying reasoning and its ability to fo
 
 ## Which Image Generator Does It Use? Do I Need an API Key?
 
-Image generation and editing prefer the current agent's built-in `image_gen.imagegen` tool. The workflow falls back to `editppt image` only under defined conditions, such as an unavailable or failed built-in tool, an unreadable edit input, or no valid local image result. The CLI tries local Codex OAuth first, using your subscription's image allowance, and then reads OpenAI-compatible API configuration from `~/.editppt/config.yaml`. Codex subscribers usually do not need to configure an API key. For a third-party fallback, give the AI the service's base URL, model name, and API key; it will save them to user-level configuration and mask sensitive values.
+Image generation and editing use the specific backend locked before the run: Cursor may use `GenerateImage`, Codex may use `image_gen.imagegen`, an installed `codex-gpt-image` bridge is also an option, or you can lock the `editppt image` CLI/API directly. The parent agent probes available options and waits for you to lock a specific label before `prepare`. The workflow falls back to `editppt image` only under defined conditions (preferred tool unavailable/failed, unreadable edit input, or no valid local image result). The CLI tries local Codex OAuth first, using your subscription's image allowance, and then reads OpenAI-compatible API configuration from `~/.editppt/config.yaml`. Codex subscribers usually do not need to configure an API key. For a third-party fallback, give the AI the service's base URL, model name, and API key; it will save them to user-level configuration and mask sensitive values.
 
 ## How Do I Update the Skill?
 

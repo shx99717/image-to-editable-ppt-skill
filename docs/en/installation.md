@@ -60,7 +60,7 @@ The skill also works without a Token by falling back to its built-in offline det
 
 ## Image Backend and Third-Party API Configuration
 
-Image generation and editing prefer the current agent's built-in `image_gen.imagegen` tool. Only when a defined fallback condition is met does the workflow invoke the `editppt image` CLI, which prefers local Codex OAuth (`~/.codex/auth.json`) and, if that is unavailable, reads OpenAI-compatible API configuration from `~/.editppt/config.yaml` or environment variables.
+Image generation and editing use the specific backend locked before the run: Cursor may use `GenerateImage`, Codex may use `image_gen.imagegen`, an installed `codex-gpt-image` bridge is also an option, or you can lock the `editppt image` CLI/API directly. The parent agent probes available options and waits for you to lock a specific label before `prepare`. Only when a defined fallback condition is met does the workflow invoke the `editppt image` CLI, which prefers local Codex OAuth (`~/.codex/auth.json`) and, if that is unavailable, reads OpenAI-compatible API configuration from `~/.editppt/config.yaml` or environment variables.
 
 You normally do not need to configure anything yourself. Ask the AI to configure an API fallback only when:
 

@@ -7,6 +7,18 @@ from PIL import Image, UnidentifiedImageError
 
 from deck_run_state import now_iso, read_json, resolve_inside, sha256_file, write_json
 
+HOST_PRODUCERS = ("GenerateImage", "image_gen.imagegen", "codex-gpt-image")
+CLI_BACKENDS = {"codex-oauth", "openai-compatible-api"}
+BACKEND_CHOICES = [
+    "builtin-imagegen",
+    "GenerateImage",
+    "image_gen.imagegen",
+    "codex-gpt-image",
+    "codex-oauth",
+    "openai-compatible-api",
+    "unknown",
+]
+
 
 def main():
     parser = argparse.ArgumentParser(
@@ -14,7 +26,7 @@ def main():
         description="Copy a selected generated image into a page directory and record provenance.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""Examples:
-  editppt image import <page_dir> --job-id clean-base-1 --source-image /tmp/generated.png --dest assets/clean_base.png --role clean_base --backend builtin-imagegen
+  editppt image import <page_dir> --job-id clean-base-1 --source-image /tmp/generated.png --dest assets/clean_base.png --role clean_base --backend GenerateImage
   editppt image import <page_dir> --job-id icon-sheet-1 --source-image sheet.png --dest assets/sheet.png --role asset_sheet --prompt-file prompts/icon-sheet.md --backend codex-oauth --fallback-reason tool-error
 """,
     )
@@ -26,7 +38,7 @@ def main():
     parser.add_argument("--prompt-file", help="Optional prompt file path used to create the selected image.")
     parser.add_argument(
         "--backend",
-        choices=["builtin-imagegen", "codex-oauth", "openai-compatible-api", "unknown"],
+        choices=BACKEND_CHOICES,
         required=True,
         help="Actual image backend that produced the selected image.",
     )
@@ -50,23 +62,36 @@ def main():
     except (UnidentifiedImageError, OSError) as exc:
         raise SystemExit(f"Generated image is unreadable: {source}: {exc}") from exc
 
-    cli_backends = {"codex-oauth", "openai-compatible-api"}
-    if args.fallback_reason and args.backend not in cli_backends:
+    if args.fallback_reason and args.backend not in CLI_BACKENDS:
         raise SystemExit("--fallback-reason requires --backend codex-oauth or openai-compatible-api")
 
     request = read_json(page_dir / "page_request.json", default={})
     contract = request.get("image_backend") or {}
     preferred_backend = contract.get("backend_id")
+    contract_tool = contract.get("tool_name") or "image_gen.imagegen"
     if preferred_backend == "builtin-imagegen":
         if args.backend == "unknown":
             raise SystemExit("A builtin-imagegen page contract requires a known producing backend")
-        if args.backend in cli_backends and not args.fallback_reason:
+        if args.backend in CLI_BACKENDS and not args.fallback_reason:
             raise SystemExit("CLI output under a builtin-imagegen contract requires --fallback-reason")
         allowed_reasons = (contract.get("fallback_policy") or {}).get("on") or []
         if args.fallback_reason and args.fallback_reason not in allowed_reasons:
             raise SystemExit(f"Fallback reason is not permitted by page_request.json: {args.fallback_reason}")
+        if args.backend == "builtin-imagegen":
+            if contract_tool != "image_gen.imagegen":
+                raise SystemExit(
+                    "--backend builtin-imagegen is a legacy alias for image_gen.imagegen only; "
+                    f"this page contract requires --backend {contract_tool}"
+                )
+        elif args.backend in HOST_PRODUCERS:
+            if args.backend != contract_tool:
+                raise SystemExit(
+                    f"--backend {args.backend} does not match page contract tool_name={contract_tool}"
+                )
+        elif args.backend not in CLI_BACKENDS:
+            raise SystemExit(f"Unsupported producing backend under builtin-imagegen: {args.backend}")
     elif preferred_backend == "editppt-image-cli":
-        if args.backend not in cli_backends:
+        if args.backend not in CLI_BACKENDS:
             raise SystemExit("An editppt-image-cli page contract requires --backend codex-oauth or openai-compatible-api")
         if args.fallback_reason:
             raise SystemExit("--fallback-reason requires a builtin-imagegen page contract")

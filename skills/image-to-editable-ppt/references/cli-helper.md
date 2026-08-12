@@ -50,7 +50,7 @@ editppt image edit --help
 editppt formula render-latex --help
 ```
 
-`editppt image` is the CLI fallback layer. Within that layer it automatically chooses Codex OAuth first, then OpenAI-compatible API credentials from `~/.editppt/config.yaml` or environment variables if OAuth is unavailable. See `manifest-schema.md` for the run/page backend field contract. `editppt doctor` checks CLI backend readiness; it cannot discover whether an agent runtime exposes the built-in tool.
+`editppt image` is the CLI fallback layer. Within that layer it automatically chooses Codex OAuth first, then OpenAI-compatible API credentials from `~/.editppt/config.yaml` or environment variables if OAuth is unavailable. See `manifest-schema.md` for the run/page backend field contract. `editppt doctor` checks CLI backend readiness; it cannot discover IDE-native host image tools or bridge skills.
 
 Public `editppt image generate/edit` parameters are intentionally narrow. Required request inputs are `--prompt` or `--prompt-file`, plus at least one `--image` for `edit`. CLI fallback calls should pass an explicit `--out`. Retained useful controls are `--model` (default `gpt-image-2`), `--size` (default `auto`), `--quality` (default `auto`), `--force`, `--dry-run`, `--timeout`, and edit-only `--mask`. The CLI does not pass any other image API options.
 
@@ -111,9 +111,18 @@ editppt config --paddle-ocr-token "<token>"
 editppt prepare input.png
 editppt prepare input.pdf
 editppt prepare input.png --image-backend builtin-imagegen
+editppt prepare input.png --image-backend builtin-imagegen --tool-name GenerateImage
+editppt prepare input.png --image-backend builtin-imagegen --tool-name codex-gpt-image
+editppt prepare input.png --image-backend editppt-image-cli
 ```
 
-Purpose: normalize a single image, multiple images, a PDF, or an image-based PPTX into a run directory and generate `deck_manifest.json`, `page_jobs.json`, `notes_manifest.json`, plus per-page `pages/page_NNN/source.png`, `page_request.json`, and text hints. `--image-backend` records the requested run/page contract; selection policy lives in `SKILL.md` subsection "Image Backend Selection".
+Purpose: normalize a single image, multiple images, a PDF, or an image-based PPTX into a run directory and generate `deck_manifest.json`, `page_jobs.json`, `notes_manifest.json`, plus per-page `pages/page_NNN/source.png`, `page_request.json`, and text hints. `--image-backend` plus optional `--tool-name` records the requested run/page contract; selection policy lives in `SKILL.md` subsection "Image Backend Selection" and `references/backend-selection.md`.
+
+```bash
+editppt run backend <run> --mode builtin-imagegen --tool-name GenerateImage
+```
+
+Purpose: correct the run/page `image_backend` lock after prepare when the wrong tool was recorded.
 
 When a PaddleOCR token is configured, `prepare` may submit the input pages to PaddleOCR for content-aware text hints. In a sandboxed or approval-gated environment, request network approval up front for this command instead of accepting a DNS/sandbox failure followed by lower-quality `builtin-ink` fallback; see `SKILL.md` Phase 1 for the approval-rejection policy.
 
@@ -199,7 +208,7 @@ Purpose: detect the text lines on one page's `source.png` and write `text_hints.
 
 ## Image Backend Commands
 
-The commands below are the CLI image-generation surface; `image_gen.imagegen` is an agent tool and has no `editppt` subcommand. See `manifest-schema.md` for the backend field contract.
+The commands below are the CLI image-generation surface. Locked host/bridge tools (`GenerateImage`, `image_gen.imagegen`, `codex-gpt-image`) are agent/bridge tools and have no `editppt` subcommand — workers call them directly, then `editppt image import`. See `manifest-schema.md` and `backend-selection.md` for the backend field contract.
 
 Generate a new image:
 
@@ -237,10 +246,10 @@ editppt image import pages/page_001 \
   --source-image /tmp/generated.png \
   --dest assets/icon-sheet.png \
   --role asset_sheet \
-  --backend builtin-imagegen
+  --backend GenerateImage
 ```
 
-`--source-image` must be an existing, readable local image. `--backend` records the actual producer and is required; `--fallback-reason` is accepted only when it is consistent with the page's backend contract. Field values and provenance rules live in `manifest-schema.md`.
+`--source-image` must be an existing, readable local image. `--backend` records the actual producer (`GenerateImage`, `image_gen.imagegen`, `codex-gpt-image`, legacy `builtin-imagegen` only for the Codex default contract, or CLI producers with `--fallback-reason`) and is required; `--fallback-reason` is accepted only when it is consistent with the page's backend contract. Field values and provenance rules live in `manifest-schema.md`.
 
 Process a chroma-key asset sheet:
 

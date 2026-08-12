@@ -49,11 +49,14 @@ class ScriptInventoryTest(unittest.TestCase):
         present = sorted(name for name in LEGACY_ENTRYPOINTS if (RUNTIME_DIR / name).exists())
         self.assertEqual([], present)
 
-    def test_skill_directory_contains_only_prompt_builder_script(self):
+    def test_skill_directory_contains_prompt_builder_and_probe_scripts(self):
         present = []
         if SKILL_SCRIPT_DIR.exists():
             present = sorted(path.name for path in SKILL_SCRIPT_DIR.glob("*.py"))
-        self.assertEqual(["build-page-worker-prompt.py"], present)
+        self.assertEqual(
+            ["build-page-worker-prompt.py", "probe_image_backends.py"],
+            present,
+        )
 
     def test_legacy_entrypoints_are_not_referenced(self):
         hits = []

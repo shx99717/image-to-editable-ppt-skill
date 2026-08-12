@@ -4,10 +4,25 @@ import json
 
 from deck_run_state import load_deck, load_jobs, read_json, run_dir_from_target, save_deck, write_json
 
+BUILTIN_TOOL_ALLOWLIST = ("image_gen.imagegen", "GenerateImage", "codex-gpt-image")
+
+
+def input_context_policy_for_tool(tool_name: str) -> str:
+    if tool_name == "GenerateImage":
+        return (
+            "generation needs prompt; for editing inspect every local input with the host view/vision tool first, "
+            "then pass prompt plus absolute local paths in referenced_image_paths"
+        )
+    return (
+        "generation needs prompt; for editing inspect every local input with view_image first, then pass "
+        "prompt plus absolute local paths in referenced_image_paths"
+    )
+
 
 def backend_contract(args):
     is_builtin = args.backend_id == "builtin-imagegen"
     requires_api_key = args.backend_id == "openai-compatible-api"
+    tool_label = args.tool_name or "image_gen.imagegen"
     contract = {
         "backend_id": args.backend_id,
         "tool_name": args.tool_name,
@@ -20,13 +35,13 @@ def backend_contract(args):
         "chroma_key_helper": "editppt image process-sheet",
         "input_context_policy": args.input_context_policy,
         "save_path_policy": (
-            "accept only an explicit output_hint or local path returned by image_gen.imagegen, verify it exists, "
+            f"accept only an explicit output_hint or local path returned by {tool_label}, verify it exists, "
             "import the selected output, and never scan for the newest file"
             if is_builtin
             else "write outputs directly to page dir or copy selected outputs before manifest references them"
         ),
         "handoff_rule": (
-            "call image_gen.imagegen serially, then import the selected local output; "
+            f"call {tool_label} serially, then import the selected local output; "
             "use editppt image generate/edit only when the built-in tool fallback policy applies"
             if is_builtin
             else "call editppt image generate/edit serially; the CLI selects Codex OAuth first and OpenAI-compatible API fallback second"
@@ -74,7 +89,6 @@ def main():
         fixed_field_overrides = [
             flag
             for flag, value in (
-                ("--tool-name", args.tool_name),
                 ("--tool-call", args.tool_call),
                 ("--fallback-command", args.fallback_command),
                 ("--input-context-policy", args.input_context_policy),
@@ -85,16 +99,19 @@ def main():
             parser.error(
                 f"{', '.join(fixed_field_overrides)} cannot override the fixed builtin-imagegen contract"
             )
-        args.tool_name = "image_gen.imagegen"
-        args.tool_call = "image_gen.imagegen"
-        args.fallback_command = "editppt image generate/edit"
-        args.input_context_policy = (
-            "generation needs prompt; for editing inspect every local input with view_image first, then pass "
-            "prompt plus absolute local paths in referenced_image_paths"
-        )
-    else:
         if args.tool_name is None:
-            args.tool_name = "editppt image"
+            args.tool_name = "image_gen.imagegen"
+        elif args.tool_name not in BUILTIN_TOOL_ALLOWLIST:
+            parser.error(
+                "--tool-name must be one of: " + ", ".join(BUILTIN_TOOL_ALLOWLIST)
+            )
+        args.tool_call = args.tool_name
+        args.fallback_command = "editppt image generate/edit"
+        args.input_context_policy = input_context_policy_for_tool(args.tool_name)
+    else:
+        if args.tool_name is not None:
+            parser.error("--tool-name only applies to --backend-id builtin-imagegen")
+        args.tool_name = "editppt image"
         if args.tool_call is None:
             args.tool_call = "editppt image generate/edit"
         if args.fallback_command is None:
