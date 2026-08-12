@@ -204,7 +204,7 @@ When used with a configured PaddleOCR token, this command calls the external OCR
 editppt page hints pages/page_001
 ```
 
-Purpose: detect the text lines on one page's `source.png` and write `text_hints.json` (each line's source-pixel `box_px`, measured glyph height, and derived font sizes) plus `text_hints.png`, the source image with every detected line framed and labeled. `editppt prepare` already runs this for every page (PDF inputs are OCR'd in one batch job when a PaddleOCR token is available via the `PADDLE_OCR_TOKEN` environment variable or `~/.editppt/config.yaml`; otherwise the built-in offline detector runs). Use this command only to regenerate hints for a page. How to consume the hints is defined in `page-decision-tree.md` section 3.1.
+Purpose: detect the text lines on one page's `source.png` and write `text_hints.json` (each line's source-pixel `box_px`, measured glyph height, and derived font sizes) plus `text_hints.png`, the source image with every detected line framed and labeled. `editppt prepare` already runs this for every page (when a PaddleOCR token is available via the `PADDLE_OCR_TOKEN` environment variable or `~/.editppt/config.yaml`, each page's `source.png` is uploaded as its own OCR job for all input types; otherwise the built-in offline detector runs). Use this command only to regenerate hints for a page. How to consume the hints is defined in `page-decision-tree.md` section 3.1.
 
 ## Image Backend Commands
 

@@ -30,6 +30,7 @@ from text_hints import attach_font_sizes, draw_overlay
 
 JOB_URL = "https://paddleocr.aistudio-app.com/api/v2/ocr/jobs"
 DEFAULT_MODEL = "PaddleOCR-VL-1.6"
+UPLOAD_TIMEOUT = 300  # seconds — client timeout for job submit POST (upload + HTTP response)
 TEXT_LABELS = {"text", "paragraph_title", "vision_footnote"}
 USAGE_NOTE = (
     "ADVISORY ONLY: these measurements are a reference, and some text lines may be "
@@ -46,7 +47,11 @@ USAGE_NOTE = (
 
 
 def submit_and_fetch(file_path: Path, token: str, model: str, timeout: int) -> list[dict]:
-    """Submit an image or multi-page PDF; return one prunedResult per page."""
+    """Submit an image file and return one prunedResult per returned page.
+
+    Deck text-hints always pass a per-page ``source.png``. The helper itself is
+    still file-format agnostic if called with another path.
+    """
     headers = {"Authorization": f"bearer {token}"}
     optional = {"useDocOrientationClassify": False, "useDocUnwarping": False, "useChartRecognition": False}
     with file_path.open("rb") as handle:
@@ -55,7 +60,7 @@ def submit_and_fetch(file_path: Path, token: str, model: str, timeout: int) -> l
             headers=headers,
             data={"model": model, "optionalPayload": json.dumps(optional)},
             files={"file": handle},
-            timeout=60,
+            timeout=UPLOAD_TIMEOUT,
         )
     if response.status_code != 200:
         raise RuntimeError(f"PaddleOCR job submit failed ({response.status_code}): {response.text[:300]}")

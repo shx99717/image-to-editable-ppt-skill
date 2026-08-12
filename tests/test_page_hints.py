@@ -257,5 +257,163 @@ class SynthesizePdfTest(unittest.TestCase):
             document.close()
 
 
+def _minimal_pruned(width=100, height=100):
+    return {
+        "width": width,
+        "height": height,
+        "parsing_res_list": [
+            {
+                "block_label": "text",
+                "block_content": "Hello",
+                "block_bbox": [10, 10, 50, 30],
+            }
+        ],
+    }
+
+
+def _two_page_dirs(tmp: Path):
+    page_dirs = []
+    for index in range(2):
+        page_dir = tmp / f"page_{index + 1:03d}"
+        page_dir.mkdir()
+        Image.new("RGB", (100, 100), "white").save(page_dir / "source.png")
+        page_dirs.append(page_dir)
+    return page_dirs
+
+
+class PaddlePagesPerPageTest(unittest.TestCase):
+    def test_uploads_each_source_png_not_pdf(self):
+        import tempfile
+        from unittest.mock import patch
+        from deck_text_hints import paddle_pages
+
+        calls = []
+
+        def fake_submit(file_path, token, model, timeout):
+            path = Path(file_path)
+            calls.append(path)
+            self.assertEqual("source.png", path.name)
+            self.assertNotEqual(".pdf", path.suffix.lower())
+            with Image.open(path) as image:
+                width, height = image.size
+            return [_minimal_pruned(width, height)]
+
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            page_dirs = _two_page_dirs(tmp_path)
+            with patch("paddle_text_hints.submit_and_fetch", side_effect=fake_submit):
+                results = paddle_pages(
+                    tmp_path,
+                    {"input_type": "pptx"},
+                    page_dirs,
+                    token="dummy",
+                    timeout=300,
+                )
+
+        self.assertEqual(2, len(calls))
+        self.assertEqual(set(page_dirs), set(results))
+        for path in calls:
+            self.assertEqual(".png", path.suffix.lower())
+
+    def test_partial_page_failure_keeps_successes(self):
+        import tempfile
+        from unittest.mock import patch
+        from deck_text_hints import paddle_pages
+
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            page_dirs = _two_page_dirs(tmp_path)
+
+            def fake_submit(file_path, token, model, timeout):
+                path = Path(file_path)
+                if page_dirs[1] in path.parents or path.parent == page_dirs[1]:
+                    raise RuntimeError("simulated page 2 failure")
+                with Image.open(path) as image:
+                    width, height = image.size
+                return [_minimal_pruned(width, height)]
+
+            with patch("paddle_text_hints.submit_and_fetch", side_effect=fake_submit):
+                results = paddle_pages(
+                    tmp_path,
+                    {"input_type": "pptx"},
+                    page_dirs,
+                    token="dummy",
+                    timeout=300,
+                )
+
+            self.assertIn(page_dirs[0], results)
+            self.assertNotIn(page_dirs[1], results)
+
+    def test_all_pages_failure_raises(self):
+        import tempfile
+        from unittest.mock import patch
+        from deck_text_hints import paddle_pages
+
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            page_dirs = _two_page_dirs(tmp_path)
+
+            def fake_submit(file_path, token, model, timeout):
+                raise RuntimeError("simulated total failure")
+
+            with patch("paddle_text_hints.submit_and_fetch", side_effect=fake_submit):
+                with self.assertRaises(RuntimeError) as ctx:
+                    paddle_pages(
+                        tmp_path,
+                        {"input_type": "pdf"},
+                        page_dirs,
+                        token="dummy",
+                        timeout=300,
+                    )
+            self.assertIn("all pages", str(ctx.exception).lower())
+
+
+class UploadTimeoutTest(unittest.TestCase):
+    def test_upload_timeout_is_300(self):
+        from paddle_text_hints import UPLOAD_TIMEOUT
+
+        self.assertEqual(300, UPLOAD_TIMEOUT)
+
+    def test_submit_post_uses_upload_timeout(self):
+        import tempfile
+        from unittest.mock import MagicMock, patch
+        from paddle_text_hints import UPLOAD_TIMEOUT, submit_and_fetch
+
+        post_response = MagicMock()
+        post_response.status_code = 200
+        post_response.json.return_value = {"data": {"jobId": "job-1"}}
+
+        done_status = MagicMock()
+        done_status.json.return_value = {
+            "data": {
+                "state": "done",
+                "resultUrl": {"jsonUrl": "https://example.test/result.jsonl"},
+            }
+        }
+
+        result_response = MagicMock()
+        result_response.text = (
+            '{"result":{"layoutParsingResults":[{"prunedResult":'
+            '{"width":10,"height":10,"parsing_res_list":[]}}]}}\n'
+        )
+        result_response.raise_for_status = MagicMock()
+
+        with tempfile.TemporaryDirectory() as tmp:
+            image_path = Path(tmp) / "source.png"
+            Image.new("RGB", (10, 10), "white").save(image_path)
+            with patch("paddle_text_hints.requests.post", return_value=post_response) as post:
+                with patch(
+                    "paddle_text_hints.requests.get",
+                    side_effect=[done_status, result_response],
+                ):
+                    pages = submit_and_fetch(image_path, "token", "PaddleOCR-VL-1.6", timeout=12)
+
+        self.assertEqual(1, len(pages))
+        self.assertTrue(post.called)
+        _, kwargs = post.call_args
+        self.assertEqual(UPLOAD_TIMEOUT, kwargs.get("timeout"))
+        self.assertNotEqual(12, kwargs.get("timeout"))
+
+
 if __name__ == "__main__":
     unittest.main()
