@@ -840,9 +840,36 @@ class MultiAgentBackendTest(unittest.TestCase):
             request = read_json(deck_path.parent / "pages/page_001/page_request.json")
             self.assertEqual(backend, request["image_backend"])
 
+    def test_prepare_forwards_tool_name_generateimage(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            source = Path(tmp) / "slide.png"
+            Image.new("RGB", (320, 180), "white").save(source)
+            out_root = Path(tmp) / "runs"
+            result = run_cli(
+                "prepare",
+                source,
+                "--out-root",
+                out_root,
+                "--image-backend",
+                "builtin-imagegen",
+                "--tool-name",
+                "GenerateImage",
+                "--no-text-hints",
+            )
+            self.assertEqual(0, result.returncode, result.stderr)
+            deck_line = next(line for line in result.stdout.splitlines() if line.endswith("deck_manifest.json"))
+            backend = read_json(Path(deck_line))["image_backend"]
+            self.assertEqual("builtin-imagegen", backend["backend_id"])
+            self.assertEqual("GenerateImage", backend["tool_name"])
+            self.assertEqual("GenerateImage", backend["tool_call"])
+            self.assertIn("host view/vision", backend["input_context_policy"])
+            self.assertNotIn("view_image", backend["input_context_policy"])
+            request = read_json(Path(deck_line).parent / "pages/page_001/page_request.json")
+            self.assertEqual(backend, request["image_backend"])
+
     def test_skill_prompt_script_output_is_accepted_by_dispatch(self):
         with tempfile.TemporaryDirectory() as tmp:
-            run_dir = make_minimal_run(tmp)
+            run_dir = make_minimal_run(tmp).resolve()
             write_json(
                 run_dir / "deck_manifest.json",
                 {
@@ -850,6 +877,17 @@ class MultiAgentBackendTest(unittest.TestCase):
                     "run_id": "run-test",
                     "image_backend": {"backend_id": "editppt-image-cli"},
                     "pages": [],
+                },
+            )
+            write_json(
+                run_dir / "pages/page_001/page_request.json",
+                {
+                    "schema_version": 1,
+                    "page_id": "page_001",
+                    "image_backend": {
+                        "backend_id": "builtin-imagegen",
+                        "tool_name": "GenerateImage",
+                    },
                 },
             )
             result = subprocess.run(
@@ -884,8 +922,11 @@ class MultiAgentBackendTest(unittest.TestCase):
             self.assertEqual(0, prompt.returncode, prompt.stderr)
             prompt_text = prompt_path.read_text(encoding="utf-8")
             self.assertIn(str(run_dir), prompt_text)
-            self.assertIn(str(ROOT / "skills/image-to-editable-ppt/references/page-decision-tree.md"), prompt_text)
-            self.assertIn("image_gen.imagegen", prompt_text)
+            self.assertIn(
+                "references/page-decision-tree.md",
+                prompt_text.replace("\\", "/"),
+            )
+            self.assertIn("execute the locked tool `GenerateImage`", prompt_text)
             self.assertIn("referenced_image_paths", prompt_text)
             self.assertIn("Missing `mask`, `model`, `size`, `quality`, or `out` never triggers fallback", prompt_text)
             self.assertIn('never a scanned "newest" file', prompt_text)
@@ -1061,8 +1102,6 @@ class MultiAgentBackendTest(unittest.TestCase):
                     run_dir,
                     "--backend-id",
                     "editppt-image-cli",
-                    "--tool-name",
-                    "editppt image",
                     "--model",
                     "gpt-image-2",
                 ],
@@ -1089,6 +1128,219 @@ class MultiAgentBackendTest(unittest.TestCase):
             )
             self.assertNotEqual(0, result.returncode)
             self.assertIn("cannot override the fixed builtin-imagegen contract", result.stderr)
+
+    def test_builtin_imagegen_allows_allowlisted_tool_name(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            run_dir = make_minimal_run(tmp)
+            result = run_cli(
+                "run",
+                "backend",
+                run_dir,
+                "--mode",
+                "builtin-imagegen",
+                "--tool-name",
+                "GenerateImage",
+            )
+            self.assertEqual(0, result.returncode, result.stderr)
+            backend = read_json(run_dir / "deck_manifest.json")["image_backend"]
+            self.assertEqual("builtin-imagegen", backend["backend_id"])
+            self.assertEqual("GenerateImage", backend["tool_name"])
+            self.assertEqual("GenerateImage", backend["tool_call"])
+            self.assertEqual(["codex-oauth", "openai-compatible-api"], backend["fallback_order"])
+            self.assertEqual(
+                ["tool-unavailable", "tool-error", "input-unreadable", "no-valid-local-output"],
+                backend["fallback_policy"]["on"],
+            )
+            self.assertFalse(backend["fallback_policy"]["missing_optional_parameters"])
+            self.assertIn("host view/vision", backend["input_context_policy"])
+            request = read_json(run_dir / "pages/page_001/page_request.json")
+            self.assertEqual(backend, request["image_backend"])
+
+    def test_builtin_imagegen_defaults_tool_name_when_omitted(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            run_dir = make_minimal_run(tmp)
+            result = run_cli("run", "backend", run_dir, "--mode", "builtin-imagegen")
+            self.assertEqual(0, result.returncode, result.stderr)
+            backend = read_json(run_dir / "deck_manifest.json")["image_backend"]
+            self.assertEqual("image_gen.imagegen", backend["tool_name"])
+            self.assertEqual("image_gen.imagegen", backend["tool_call"])
+
+    def test_builtin_imagegen_rejects_unknown_tool_name(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            run_dir = make_minimal_run(tmp)
+            result = run_cli(
+                "run",
+                "backend",
+                run_dir,
+                "--mode",
+                "builtin-imagegen",
+                "--tool-name",
+                "NotARealTool",
+            )
+            self.assertNotEqual(0, result.returncode)
+            self.assertIn("--tool-name", result.stderr)
+
+    def test_builtin_imagegen_allows_codex_gpt_image_tool_name(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            run_dir = make_minimal_run(tmp)
+            result = run_cli(
+                "run",
+                "backend",
+                run_dir,
+                "--mode",
+                "builtin-imagegen",
+                "--tool-name",
+                "codex-gpt-image",
+            )
+            self.assertEqual(0, result.returncode, result.stderr)
+            backend = read_json(run_dir / "deck_manifest.json")["image_backend"]
+            self.assertEqual("builtin-imagegen", backend["backend_id"])
+            self.assertEqual("codex-gpt-image", backend["tool_name"])
+            self.assertEqual("codex-gpt-image", backend["tool_call"])
+
+    def test_non_builtin_modes_reject_tool_name(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            run_dir = make_minimal_run(tmp)
+            for mode in ("editppt-image-cli", "openai-compatible-api"):
+                with self.subTest(mode=mode):
+                    result = run_cli(
+                        "run",
+                        "backend",
+                        run_dir,
+                        "--mode",
+                        mode,
+                        "--tool-name",
+                        "GenerateImage",
+                    )
+                    self.assertNotEqual(0, result.returncode)
+                    self.assertIn("--tool-name only applies to", result.stderr)
+
+    def test_image_import_under_generateimage_contract(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            page_dir = Path(tmp) / "page_001"
+            page_dir.mkdir()
+            write_json(page_dir / "imagegen-jobs.json", {"schema_version": 1, "jobs": []})
+            write_json(
+                page_dir / "page_request.json",
+                {
+                    "image_backend": {
+                        "backend_id": "builtin-imagegen",
+                        "tool_name": "GenerateImage",
+                        "fallback_policy": {
+                            "on": [
+                                "tool-unavailable",
+                                "tool-error",
+                                "input-unreadable",
+                                "no-valid-local-output",
+                            ]
+                        },
+                    }
+                },
+            )
+            source = Path(tmp) / "generated.png"
+            Image.new("RGBA", (12, 12), (255, 0, 0, 255)).save(source)
+
+            ok = run_cli(
+                "image",
+                "import",
+                page_dir,
+                "--job-id",
+                "job-gi",
+                "--source-image",
+                source,
+                "--dest",
+                "assets/gi.png",
+                "--backend",
+                "GenerateImage",
+            )
+            self.assertEqual(0, ok.returncode, ok.stderr)
+
+            legacy = run_cli(
+                "image",
+                "import",
+                page_dir,
+                "--job-id",
+                "job-legacy",
+                "--source-image",
+                source,
+                "--dest",
+                "assets/legacy.png",
+                "--backend",
+                "builtin-imagegen",
+            )
+            self.assertNotEqual(0, legacy.returncode)
+
+            no_reason = run_cli(
+                "image",
+                "import",
+                page_dir,
+                "--job-id",
+                "job-cli",
+                "--source-image",
+                source,
+                "--dest",
+                "assets/cli.png",
+                "--backend",
+                "codex-oauth",
+            )
+            self.assertNotEqual(0, no_reason.returncode)
+            self.assertIn("--fallback-reason", no_reason.stderr)
+
+            with_reason = run_cli(
+                "image",
+                "import",
+                page_dir,
+                "--job-id",
+                "job-cli-ok",
+                "--source-image",
+                source,
+                "--dest",
+                "assets/cli-ok.png",
+                "--backend",
+                "codex-oauth",
+                "--fallback-reason",
+                "tool-unavailable",
+            )
+            self.assertEqual(0, with_reason.returncode, with_reason.stderr)
+
+    def test_image_import_legacy_builtin_alias_only_for_codex_default(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            page_dir = Path(tmp) / "page_001"
+            page_dir.mkdir()
+            write_json(page_dir / "imagegen-jobs.json", {"schema_version": 1, "jobs": []})
+            write_json(
+                page_dir / "page_request.json",
+                {
+                    "image_backend": {
+                        "backend_id": "builtin-imagegen",
+                        "tool_name": "image_gen.imagegen",
+                        "fallback_policy": {
+                            "on": [
+                                "tool-unavailable",
+                                "tool-error",
+                                "input-unreadable",
+                                "no-valid-local-output",
+                            ]
+                        },
+                    }
+                },
+            )
+            source = Path(tmp) / "generated.png"
+            Image.new("RGBA", (12, 12), (0, 255, 0, 255)).save(source)
+            result = run_cli(
+                "image",
+                "import",
+                page_dir,
+                "--job-id",
+                "job-alias",
+                "--source-image",
+                source,
+                "--dest",
+                "assets/alias.png",
+                "--backend",
+                "builtin-imagegen",
+            )
+            self.assertEqual(0, result.returncode, result.stderr)
 
     def test_all_pending_pages_are_dispatchable(self):
         with tempfile.TemporaryDirectory() as tmp:

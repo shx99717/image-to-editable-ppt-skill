@@ -1,0 +1,1 @@
+RED 2026-08-12: new allowlist tool_name + GenerateImage import tests fail as expected (configure still forbids --tool-name; import choices lack GenerateImage). defaults/unknown-reject/legacy-alias already green or fail-for-wrong-reason until GREEN.

@@ -80,12 +80,15 @@ def build_prompt(run_dir: Path, page: dict, page_dir: Path) -> str:
     request = read_json(page_dir / "page_request.json")
     page_id = page.get("page_id")
     source_image = request.get("source_image") or str(page_dir / "source.png")
+    image_backend = request.get("image_backend") or {}
+    tool_name = image_backend.get("tool_name") or "image_gen.imagegen"
     replacements = {
         "{{RUN_DIR}}": str(run_dir),
         "{{PAGE_ID}}": str(page_id),
         "{{PAGE_DIR}}": str(page_dir),
         "{{SOURCE_IMAGE}}": str(source_image),
         "{{SKILL_ROOT}}": str(SKILL_ROOT),
+        "{{TOOL_NAME}}": str(tool_name),
     }
     prompt = page_worker_template()
     for placeholder, value in replacements.items():

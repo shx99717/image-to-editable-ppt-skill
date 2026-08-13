@@ -47,6 +47,10 @@ temp/
 !assets/
 !assets/**
 
+# Smoke-reconstruction fixture PPTX (input only; runs/ stay ignored).
+!tests/smoke-reconstruction/fixtures/
+!tests/smoke-reconstruction/fixtures/**
+
 # Tool caches
 /.claude/
 .pytest_cache/

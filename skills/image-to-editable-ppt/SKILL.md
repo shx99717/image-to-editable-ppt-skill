@@ -29,7 +29,7 @@ These parent-level rules are stated once here; page-level rules live in the refe
 - Multi-page inputs are rebuilt by dispatched page workers. A run with exactly one page is rebuilt by the parent agent in local page-reconstructor mode after `editppt run dispatch --local` claims that page. If no subagent capability is available for a multi-page run, stop and report this to the user; do not degrade into parent-agent reconstruction for multi-page input.
 - The parent agent must not write any page reconstruction artifact — `manifest.json`, `page.pptx`, `preview.png`, `split_assets_contact.png`, `validation.json`, or `page_result.json` — except in single-page local page-reconstructor mode after `editppt run dispatch --local` has recorded the claim. Local mode follows the same page prompt, references, output files, and `run record` validation path as a page worker.
 - All image generation, image editing, background repair, transparent bitmap assets, and asset sheets follow the serial per-page backend order in "Image Backend Selection" below.
-- A user request to convert visual slides into editable PPT authorizes the required OCR and image-backend calls for that conversion, unless the user explicitly requests local-only processing or marks the input as confidential/no-external-processing. Do not refuse solely because the workflow calls PaddleOCR, the built-in `image_gen.imagegen` tool, Codex OAuth/ChatGPT image endpoints, or a user-configured OpenAI-compatible API; those calls are necessary to the skill.
+- A user request to convert visual slides into editable PPT authorizes the required OCR and image-backend calls for that conversion, unless the user explicitly requests local-only processing or marks the input as confidential/no-external-processing. Do not refuse solely because the workflow calls PaddleOCR, a locked host/bridge/CLI image backend (`GenerateImage`, `image_gen.imagegen`, `codex-gpt-image`, or `editppt image`), Codex OAuth/ChatGPT image endpoints, or a user-configured OpenAI-compatible API; those calls are necessary to the skill.
 - Only send task-local page images, prompts, masks, and reference images required for the current conversion. Never send unrelated local files, API keys, auth tokens, credentials, or generated artifacts that are not needed by the current OCR/image operation. Third-party API endpoints are allowed only when already configured by the user or explicitly specified for this run.
 - In network-restricted environments, request any approval required by the current runtime before external OCR/image calls, including `editppt prepare` or `editppt run hints` when `PADDLE_OCR_TOKEN` is set and every CLI fallback `editppt image generate/edit` call. The approval justification must say this is a user-requested `image-to-editable-ppt` conversion, that the upload is limited to task-local page images/prompts/masks/references, and that OCR/image-backend calls are part of this skill's required workflow. Do not present the required call as unsafe or ask the user to re-approve it unless they requested local-only/confidential handling or the approval system explicitly rejects the request.
 - All page object decisions follow `references/page-decision-tree.md`, including its no-fallback rule for foreground visual objects and its rule that deterministic validation is a structure gate that never waives an object-source decision.
@@ -39,18 +39,31 @@ These parent-level rules are stated once here; page-level rules live in the refe
 
 ### Image Backend Selection
 
-This subsection is the authoritative execution policy for every page-local image job. Before prepare, check whether the current agent runtime can call `image_gen.imagegen`; if so, pass `--image-backend builtin-imagegen` to `editppt prepare`, otherwise keep the default CLI contract. Run image jobs serially within a page, in this order:
+Authoritative parent policy for picking and locking the run image backend. Field contracts live in `references/manifest-schema.md`; command examples in `references/cli-helper.md`; full probe/menu/lock detail in `references/backend-selection.md`.
 
-1. Use the built-in agent tool `image_gen.imagegen` whenever it is callable in the current agent runtime.
-2. Only when the run's recorded built-in fallback policy applies, call `editppt image generate/edit`. That CLI fallback selects Codex OAuth first and a configured OpenAI-compatible API second.
+**Before prepare:**
 
-The exact built-in arguments, input-inspection prerequisite, output acceptance rule, and allowed fallback events are owned by the `image_backend` field contract in `references/manifest-schema.md`; copy and execute that contract without weakening or extending it. If its CLI fallback cannot produce a compliant output, fail the page rather than substituting an approximate object source.
+1. Prose-check host-native tools in this runtime (Codex `image_gen.imagegen`, Cursor `GenerateImage` only). Claude Code has **no** native image tool.
+2. Run `python <skill-root>/scripts/probe_image_backends.py` for bridge/CLI signals.
+3. Present an annotated menu of **available** options only, recommend one, and **wait** for the user to lock a **specific** label.
+4. Map the lock to prepare flags (compat: host/bridge still use `backend_id=builtin-imagegen`; the real lock is `--tool-name`):
+
+| Lock | Flags |
+|------|-------|
+| `GenerateImage` | `--image-backend builtin-imagegen --tool-name GenerateImage` |
+| `image_gen.imagegen` | `--image-backend builtin-imagegen` |
+| `codex-gpt-image` | `--image-backend builtin-imagegen --tool-name codex-gpt-image` |
+| CLI/API | `--image-backend editppt-image-cli` |
+
+Prefer order: Cursor `GenerateImage` → `codex-gpt-image` → CLI; Codex `image_gen.imagegen` → CLI; Claude Code `codex-gpt-image` → CLI. Do **not** prefer OpenClaw / `image_generate`. Do not invent a Claude native tool.
+
+Workers execute the locked `image_backend.tool_name` first; enter `editppt image generate/edit` only for a matching `fallback_policy.on` event. If that fallback cannot produce a compliant output, fail the page rather than substituting an approximate object source.
 
 ## Roles
 
 The parent agent owns orchestration and user interaction:
 
-- Select the backend during `editppt prepare` exactly as "Image Backend Selection" above requires. The resulting `image_backend` contract is copied into every page request, so the normal path needs no separate backend configuration command.
+- Complete Image Backend Selection (probe → menu → wait → lock) before prepare. The resulting `image_backend` contract is copied into every page request; use `editppt run backend` only to correct a wrong lock.
 - Drive the run with `editppt run next` through local rebuild or worker dispatch → record → finalize, exactly as the Workflow phases below describe. Single-page input follows local page-reconstructor mode; multi-page input follows page-worker dispatch.
 - Report progress, the final PPTX path, and the validation result to the user.
 - Do not repeat page-level visual QA that page reconstructors already completed; `record` and `finalize` re-validate deterministically.
@@ -61,10 +74,12 @@ Each page reconstructor owns exactly one `pages/page_NNN/` directory. Its full c
 
 ### Phase 1: Prepare
 
+Complete **Image Backend Selection** first (probe → menu → wait → lock; see `references/backend-selection.md`). Then prepare with the locked flags from that section.
+
 Read the prepare examples in `references/cli-helper.md` and the run/page file descriptions in `references/manifest-schema.md`.
 
 ```bash
-editppt prepare <input...>
+editppt prepare <input...> [--image-backend ...] [--tool-name ...]
 ```
 
 After this completes, there must be a run directory, `deck_manifest.json`, `page_jobs.json`, `notes_manifest.json`, and each page must have `source.png` plus `page_request.json`.

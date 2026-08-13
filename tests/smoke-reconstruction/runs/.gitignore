@@ -1,0 +1,4 @@
+# Test run outputs are local artifacts, not repository content.
+*
+!.gitignore
+!.gitkeep

@@ -60,7 +60,7 @@ Token 없이도 실행할 수 있습니다. 이 경우 skill은 내장 오프라
 
 ## 이미지 Backend 및 타사 API 구성
 
-이미지 생성과 편집은 현재 agent의 내장 `image_gen.imagegen` 도구를 우선 사용합니다. 정해진 폴백 조건을 충족할 때만 `editppt image` CLI로 전환하며, CLI는 로컬 Codex OAuth(`~/.codex/auth.json`)를 우선 사용하고 사용할 수 없으면 `~/.editppt/config.yaml` 또는 환경 변수의 OpenAI-compatible API 설정을 읽습니다.
+이미지 생성과 편집은 실행 전에 잠근 구체적 backend로 수행합니다. Cursor는 `GenerateImage`, Codex는 `image_gen.imagegen`을 쓸 수 있고, 설치된 `codex-gpt-image` 브리지 또는 `editppt image` CLI/API를 직접 잠글 수도 있습니다. 부모 agent가 사용 가능한 옵션을 조사한 뒤 사용자가 구체적 라벨을 잠글 때까지 기다린 다음 `prepare`합니다. 정해진 폴백 조건을 충족할 때만 `editppt image` CLI로 전환하며, CLI는 로컬 Codex OAuth(`~/.codex/auth.json`)를 우선 사용하고 사용할 수 없으면 `~/.editppt/config.yaml` 또는 환경 변수의 OpenAI-compatible API 설정을 읽습니다.
 
 일반적으로 직접 구성할 필요는 없습니다. 다음 경우에만 AI에게 API 폴백 구성을 요청하세요.
 

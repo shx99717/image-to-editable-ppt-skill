@@ -40,7 +40,7 @@ Claude Code, OpenClaw, Hermes Agent 등 Codex가 아닌 환경에는 일반적�
 
 ## Q: 이미지 생성에는 무엇을 사용하나요? API key가 필요한가요?
 
-이미지 생성과 편집은 현재 agent의 내장 `image_gen.imagegen` 도구를 우선 사용합니다. 내장 도구를 사용할 수 없거나 호출에 실패한 경우, 편집 입력을 읽을 수 없는 경우, 또는 유효한 로컬 이미지가 반환되지 않은 경우처럼 정해진 조건에서만 `editppt image`로 폴백합니다. CLI는 구독 측 이미지 할당량을 사용하는 로컬 Codex OAuth를 먼저 시도한 뒤 `~/.editppt/config.yaml`의 OpenAI-compatible API 설정을 읽습니다. Codex 회원은 일반적으로 API key를 구성할 필요가 없습니다. 타사 폴백이 필요하면 서비스의 base URL, 모델명, API key를 AI에게 알려 주세요. AI가 사용자 수준 설정에 기록하고 출력에서는 민감한 값을 가립니다.
+이미지 생성과 편집은 실행 전에 잠근 구체적 backend로 수행합니다. Cursor는 `GenerateImage`, Codex는 `image_gen.imagegen`을 쓸 수 있고, 설치된 `codex-gpt-image` 브리지 또는 `editppt image` CLI/API를 직접 잠글 수도 있습니다. 부모 agent가 사용 가능한 옵션을 조사한 뒤 사용자가 구체적 라벨을 잠글 때까지 기다린 다음 `prepare`합니다. 선호 도구를 사용할 수 없거나 호출에 실패한 경우, 편집 입력을 읽을 수 없는 경우, 또는 유효한 로컬 이미지가 반환되지 않은 경우처럼 정해진 조건에서만 `editppt image`로 폴백합니다. CLI는 구독 측 이미지 할당량을 사용하는 로컬 Codex OAuth를 먼저 시도한 뒤 `~/.editppt/config.yaml`의 OpenAI-compatible API 설정을 읽습니다. Codex 회원은 일반적으로 API key를 구성할 필요가 없습니다. 타사 폴백이 필요하면 서비스의 base URL, 모델명, API key를 AI에게 알려 주세요. AI가 사용자 수준 설정에 기록하고 출력에서는 민감한 값을 가립니다.
 
 ## Q: skill을 최신 버전으로 업데이트하려면 어떻게 하나요?
 

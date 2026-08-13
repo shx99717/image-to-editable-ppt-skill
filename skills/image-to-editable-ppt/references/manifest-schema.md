@@ -62,20 +62,20 @@ Key fields:
 }
 ```
 
-`image_backend` is written by `editppt prepare` and may be overwritten by `editppt run backend` when needed. Parent-level backend selection policy lives in `SKILL.md` subsection "Image Backend Selection".
+`image_backend` is written by `editppt prepare` and may be overwritten by `editppt run backend` when needed. Parent-level backend selection policy lives in `SKILL.md` subsection "Image Backend Selection" and `references/backend-selection.md`.
 
-For `backend_id: "builtin-imagegen"`, these fields are required and have fixed meanings:
+For `backend_id: "builtin-imagegen"` (compat bucket for preferred host/bridge tools — not Codex-only), these fields are required:
 
-- `tool_name`: `image_gen.imagegen`, an agent tool rather than a Python or shell API.
+- `tool_name` / `tool_call`: one of `image_gen.imagegen` (default when omitted), `GenerateImage`, or `codex-gpt-image`. This is the real user-visible lock.
 - `required_parameters`: the complete required argument sets. Generation needs `prompt`; editing needs `prompt` plus absolute local paths in `referenced_image_paths`.
-- `input_context_policy`: requires `view_image` on every edit input before the built-in call; generation has no image input.
+- `input_context_policy`: for Codex default, requires `view_image` on every edit input before the tool call; for `GenerateImage`, inspect with the host view/vision tool first. Generation has no image input.
 - `save_path_policy`: permits only an explicit valid local result path, including `output_hint`, followed by `editppt image import`; newest-file directory scanning is forbidden.
 - `fallback_command`: the CLI surface used only after the fallback policy matches.
 - `fallback_order`: the CLI's internal order, Codex OAuth before a configured OpenAI-compatible API.
-- `fallback_policy.on`: the only events that permit leaving the built-in tool: it is unavailable/not callable, its call errors, an edit input is unreadable, or it returns no valid local image.
+- `fallback_policy.on`: the only events that permit leaving the preferred tool: it is unavailable/not callable, its call errors, an edit input is unreadable, or it returns no valid local image.
 - `fallback_policy.missing_optional_parameters`: always `false`; absent optional controls never authorize fallback.
 
-Other backend metadata may describe model labels, runtime homes, or handoff text, but it does not change this order. Parent-level tool selection and user-interaction policy live in `SKILL.md` subsection "Image Backend Selection"; page reconstructors execute the copied contract above.
+Other backend metadata may describe model labels, runtime homes, or handoff text, but it does not change this order. Parent-level tool selection and user-interaction policy live in `SKILL.md` / `backend-selection.md`; page reconstructors execute the copied contract above.
 
 ## `page_jobs.json`
 
@@ -353,7 +353,7 @@ Each imported job records at least the selected output and the backend that actu
 }
 ```
 
-`backend` is the actual producer: `builtin-imagegen`, `codex-oauth`, or `openai-compatible-api`; `unknown` is reserved for legacy page directories that have no `image_backend` contract. `editppt image import` requires an explicit producer, rejects files that are not readable images, and checks `backend`/`fallback_reason` against the page contract. `fallback_reason` is `null` when the preferred backend succeeded or the run selected a CLI contract directly; when a built-in contract enters its CLI fallback, it records the matching event from `image_backend.fallback_policy.on`.
+`backend` is the actual producer: `GenerateImage`, `image_gen.imagegen`, `codex-gpt-image`, legacy alias `builtin-imagegen` (accepted only when the page contract `tool_name` is `image_gen.imagegen`), `codex-oauth`, or `openai-compatible-api`; `unknown` is reserved for legacy page directories that have no `image_backend` contract. `editppt image import` requires an explicit producer, rejects files that are not readable images, and checks `backend`/`fallback_reason` against the page contract. `fallback_reason` is `null` when the preferred backend succeeded or the run selected a CLI contract directly; when a preferred-host contract enters its CLI fallback, it records the matching event from `image_backend.fallback_policy.on`.
 
 State and provenance record rules are described in the State Principles section of `SKILL.md` and in the asset processing examples in `cli-helper.md`.
 
