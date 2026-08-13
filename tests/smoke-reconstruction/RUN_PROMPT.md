@@ -13,6 +13,7 @@ Host-pinned variants (recommended when chasing bugs one host at a time):
 | Cursor interactive | [`RUN_PROMPT_cursor_interactive.md`](RUN_PROMPT_cursor_interactive.md) |
 | Claude Code | [`RUN_PROMPT_claude.md`](RUN_PROMPT_claude.md) |
 | Codex | [`RUN_PROMPT_codex.md`](RUN_PROMPT_codex.md) |
+| Codex interactive | [`RUN_PROMPT_codex_interactive.md`](RUN_PROMPT_codex_interactive.md) |
 
 ---
 

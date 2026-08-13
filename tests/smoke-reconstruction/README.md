@@ -29,6 +29,7 @@ Use it after host-backend / skill changes to confirm:
 | [`RUN_PROMPT_cursor.md`](RUN_PROMPT_cursor.md) | Cursor | hard-pin `GenerateImage` |
 | [`RUN_PROMPT_cursor_codex-gpt-image.md`](RUN_PROMPT_cursor_codex-gpt-image.md) | Cursor | hard-pin `codex-gpt-image` |
 | [`RUN_PROMPT_cursor_interactive.md`](RUN_PROMPT_cursor_interactive.md) | Cursor | probe → menu → wait → lock (+ other pauses) |
+| [`RUN_PROMPT_codex_interactive.md`](RUN_PROMPT_codex_interactive.md) | Codex | probe → menu → wait → lock (+ other pauses) |
 | [`RUN_PROMPT_claude.md`](RUN_PROMPT_claude.md) | Claude Code | hard-pin `codex-gpt-image` (no invented native) |
 | [`RUN_PROMPT_codex.md`](RUN_PROMPT_codex.md) | Codex | hard-pin `image_gen.imagegen` |
 | [`RUN_PROMPT.md`](RUN_PROMPT.md) | any | self-detect host; still wait to lock |
